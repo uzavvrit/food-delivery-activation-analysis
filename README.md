@@ -1,6 +1,8 @@
 # Анализ воронки первого заказа в сервисе доставки еды
 
-![Python](https://img.shields.io/badge/Python-pandas-blue) ![SQL](https://img.shields.io/badge/SQL-SQLite-lightgrey) ![Data](https://img.shields.io/badge/Data-synthetic-orange)
+[![CI](https://github.com/uzavvrit/food-delivery-activation-analysis/actions/workflows/ci.yml/badge.svg)](https://github.com/uzavvrit/food-delivery-activation-analysis/actions/workflows/ci.yml)
+
+**Стек:** Python (pandas, matplotlib), SQL (SQLite), pytest.
 
 ## О проекте
 
@@ -25,6 +27,10 @@
 
 ![Воронка первого заказа](reports/figures/01_overall_funnel.png)
 
+### Потери между этапами воронки
+
+![Абсолютные и относительные потери](reports/figures/04_step_dropoff.png)
+
 ### Конверсия checkout по платформам
 
 ![Конверсия checkout на Android и iOS](reports/figures/02_checkout_platform.png)
@@ -32,6 +38,10 @@
 ### Частота событий ошибок оплаты
 
 ![Доля пользователей с ошибками оплаты](reports/figures/03_payment_failures.png)
+
+### Конверсия по каналам привлечения
+
+![Конверсия первого заказа по каналам](reports/figures/05_acquisition_channels.png)
 
 ## Исследовательские вопросы
 
@@ -70,9 +80,10 @@
 │   ├── validation_report.md # проверка расчётов
 │   ├── figures/             # графики
 │   └── tables/              # итоговые таблицы
-├── scripts/                 # генерация данных и аналитический пайплайн
+├── scripts/                 # генерация данных, расчёты и визуализации
 ├── sql/                     # запросы для расчёта метрик
 ├── tests/                   # автоматические тесты
+├── .github/workflows/ci.yml # автоматические тесты и пересчёт отчёта
 ├── Makefile
 ├── requirements.txt
 └── README.md
