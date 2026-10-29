@@ -5,9 +5,7 @@ import math
 import sqlite3
 from pathlib import Path
 
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
+from scripts.visualize import save_charts
 import pandas as pd
 
 SQL_ROOT = Path(__file__).resolve().parents[1] / "sql"
@@ -75,42 +73,7 @@ def analyze(data_dir: Path, report_dir: Path) -> dict:
     losses = funnel.dropna(subset=["lost_users"]).sort_values("lost_users", ascending=False)
     largest_loss = losses.iloc[0]
 
-    fig, ax = plt.subplots(figsize=(10, 5.1), layout="constrained")
-    stages = funnel["event"].to_list()
-    counts = funnel["users"].astype(int).to_list()
-    bars = ax.barh(stages[::-1], counts[::-1])
-    ax.bar_label(bars, fmt="%d", padding=4)
-    ax.set_xlim(0, total * 1.16)
-    ax.set_xlabel("Users (distinct user_id)")
-    ax.set_title("First-order funnel · 7 days after signup · synthetic data")
-    ax.grid(axis="x", alpha=0.2)
-    ax.set_axisbelow(True)
-    fig.savefig(report_dir / "figures" / "01_overall_funnel.png", dpi=170)
-    plt.close(fig)
-
-    fig, ax = plt.subplots(figsize=(8.5, 5.0), layout="constrained")
-    labels = ["Android", "iOS"]
-    values = [100 * p_android, 100 * p_ios]
-    bars = ax.bar(labels, values, width=0.55)
-    ax.bar_label(bars, labels=[f"{v:.1f}%" for v in values], padding=5)
-    ax.set_ylim(0, 100)
-    ax.set_ylabel("Checkout → first order, %")
-    ax.set_title("Checkout completion differs by platform · synthetic data")
-    ax.grid(axis="y", alpha=0.2)
-    ax.set_axisbelow(True)
-    fig.savefig(report_dir / "figures" / "02_checkout_platform.png", dpi=170)
-    plt.close(fig)
-
-    fig, ax = plt.subplots(figsize=(8.5, 5), layout="constrained")
-    bars = ax.bar(pay.index.str.upper(), pay["payment_failure_pct"].to_numpy(), width=0.55)
-    ax.bar_label(bars, labels=[f"{v:.1f}%" for v in pay["payment_failure_pct"]], padding=5)
-    ax.set_ylim(0, 45)
-    ax.set_ylabel("Checkout users with payment_failed, %")
-    ax.set_title("Observed payment-failure event rate · synthetic data")
-    ax.grid(axis="y", alpha=0.2)
-    ax.set_axisbelow(True)
-    fig.savefig(report_dir / "figures" / "03_payment_failures.png", dpi=170)
-    plt.close(fig)
+    save_charts(funnel, segments, outputs["payments"], report_dir / "figures")
 
     # What-if is not a causal estimate: just hypothetical +5 pp Android checkout completion.
     hypothetical_extra = round(android_n * 0.05)
@@ -133,6 +96,8 @@ def analyze(data_dir: Path, report_dir: Path) -> dict:
 
 ![Общая воронка](figures/01_overall_funnel.png)
 
+![Потери между этапами](figures/04_step_dropoff.png)
+
 Деноминатор для общей конверсии — **все зарегистрированные**; для конверсии шага — **дошедшие до предыдущего шага**. Строки — уникальные пользователи, а не количество событий.
 
 | Шаг | Пользователей | От регистраций | От предыдущего шага | Потеря пользователей |
@@ -151,6 +116,10 @@ def analyze(data_dir: Path, report_dir: Path) -> dict:
 ![Ошибки оплаты](figures/03_payment_failures.png)
 
 На Android доля зафиксированных ошибок оплаты выше, а завершение оформления заказа ниже. **Гипотеза:** некоторым пользователям Android сложнее успешно оплатить заказ. **Нельзя заключить**, что события ошибок объясняют всю разницу: не учтены типы банковских карт, версии приложения, цена заказа, интернет-соединение, промокоды и другие факторы. Для проверки нужны логи ошибок, методы оплаты и контрольный эксперимент.
+
+### Каналы привлечения
+
+![Активация по каналам](figures/05_acquisition_channels.png)
 
 ## 5. Возврат за повторной покупкой (вторичная метрика)
 

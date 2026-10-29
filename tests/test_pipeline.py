@@ -45,5 +45,6 @@ def test_analysis_pipeline_with_small_dataset(tmp_path: Path) -> None:
     assert 0 <= metrics["conversion"] <= 100
     for name in ["analysis_report.md", "validation_report.md", "figures/01_overall_funnel.png",
                  "figures/02_checkout_platform.png", "figures/03_payment_failures.png",
+                 "figures/04_step_dropoff.png", "figures/05_acquisition_channels.png",
                  "tables/funnel.csv", "tables/payments.csv"]:
         assert (reports / name).is_file()
