@@ -1,0 +1,7 @@
+step,event,users,from_signup_pct,from_previous_pct,lost_users
+1,Signup,12000,100.0,,
+2,Address added,10172,84.77,84.77,1828.0
+3,Restaurant opened,8922,74.35,87.71,1250.0
+4,Added to cart,6316,52.63,70.79,2606.0
+5,Checkout started,5540,46.17,87.71,776.0
+6,First order,3974,33.12,71.73,1566.0

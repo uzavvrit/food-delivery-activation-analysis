@@ -1,0 +1,7 @@
+segment_type,segment,signups,checkouts,first_orders,signup_to_order_pct,checkout_to_order_pct
+channel,ads,3672,1555,1116,30.39,71.77
+channel,organic,4148,2049,1478,35.63,72.13
+channel,referral,2419,1159,831,34.35,71.7
+channel,social,1761,777,549,31.18,70.66
+platform,android,6624,2925,1936,29.23,66.19
+platform,ios,5376,2615,2038,37.91,77.93
